@@ -17,7 +17,7 @@ def write_include
     group "root"
     mode 0644
     variables( :files => file_includes )
-    notifies :restart, resources(:service => node[:dhcp][:service_name]), :delayed
+    notifies :restart, "service[#{node[:dhcp][:service_name]}", :delayed
   end
 end
 
@@ -40,7 +40,7 @@ action :add do
     owner "root"
     group "root"
     mode 0644
-    notifies :restart, resources(:service => node[:dhcp][:service_name]), :delayed
+    notifies :restart, "service[#{node[:dhcp][:service_name]}", :delayed
   end
   write_include
 end
@@ -48,8 +48,7 @@ end
 action :remove do
   file "#{new_resource.conf_dir}/subnets.d/#{new_resource.name}.conf" do
     action :delete
-    notifies :restart, resources(:service => node[:dhcp][:service_name]), :delayed
-    notifies :send_notification, new_resource, :immediately
+    notifies :restart, "service[#{node[:dhcp][:service_name]}", :delayed
   end
   write_include
 end
